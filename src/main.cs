@@ -7,9 +7,20 @@ class Program
         {
             Console.Write("$ ");
             string command = Console.ReadLine();
-            if(command == "exit") return;
-            if (command == null || command != null)
-                Console.WriteLine($"{command}: command not found");
+
+            if (command == "exit") return;
+
+            string firstCommand = command.Split(" ")[0];
+
+            if (firstCommand == "echo")
+            {
+                string[] args = command.Substring(command.IndexOf(' ') + 1).Split(" ");
+                Console.WriteLine(String.Join(" ", args));
+                continue;
+            }
+
+
+            Console.WriteLine($"{command}: command not found");
         }
     }
 }
