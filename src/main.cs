@@ -2,7 +2,7 @@ class Program
 {
     static void Main()
     {
-        // TODO: Uncomment the code below to pass the first stage
+        List<string> builtin = new(["exit", "echo", "type"]);
         while (true)
         {
             Console.Write("$ ");
@@ -19,6 +19,15 @@ class Program
                 continue;
             }
 
+            if (firstCommand == "type")
+            {
+                string arg = command.Substring(command.IndexOf(' ') + 1);
+                if (builtin.Contains(arg))
+                    Console.WriteLine($"{arg} is a shell builtin");
+                else
+                    Console.WriteLine($"{arg}: not found");
+                continue;
+            }
 
             Console.WriteLine($"{command}: command not found");
         }
