@@ -50,7 +50,7 @@ void type(string[] arguments)
         foreach (string dir in directories)
         {
             if (!Directory.Exists(dir)) continue;
-            string fullPath = dir + cmd;
+            string fullPath = Path.Combine(dir, cmd);
             // var files = Directory.GetFiles(dir);
             // var exactFilePath = files.FirstOrDefault(f =>
             // Path.GetFileNameWithoutExtension(f).Equals(cmd, StringComparison.OrdinalIgnoreCase));
