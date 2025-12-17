@@ -50,14 +50,14 @@ void type(string[] arguments)
         foreach (string dir in directories)
         {
             if (!Directory.Exists(dir)) continue;
-
-            var files = Directory.GetFiles(dir);
-            var exactFilePath = files.FirstOrDefault(f =>
-            Path.GetFileNameWithoutExtension(f).Equals(cmd, StringComparison.OrdinalIgnoreCase));
-            // var names = files.Select(f => Path.GetFileNameWithoutExtension(f));
-            if (exactFilePath != null)
+            string fullPath = dir + cmd;
+            // var files = Directory.GetFiles(dir);
+            // var exactFilePath = files.FirstOrDefault(f =>
+            // Path.GetFileNameWithoutExtension(f).Equals(cmd, StringComparison.OrdinalIgnoreCase));
+            // // var names = files.Select(f => Path.GetFileNameWithoutExtension(f));
+            if (File.Exists(fullPath))
             {
-                System.Console.WriteLine($"{cmd} is {exactFilePath}");
+                System.Console.WriteLine($"{cmd} is {fullPath}");
                 return;
             }
         }
