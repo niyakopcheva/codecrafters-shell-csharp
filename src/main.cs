@@ -50,14 +50,23 @@ void type(string[] arguments)
         foreach (string dir in directories)
         {
             if (!Directory.Exists(dir)) continue;
-            string fullPath = Path.Combine(dir, cmd);
-            // var files = Directory.GetFiles(dir);
-            // var exactFilePath = files.FirstOrDefault(f =>
-            // Path.GetFileNameWithoutExtension(f).Equals(cmd, StringComparison.OrdinalIgnoreCase));
-            // // var names = files.Select(f => Path.GetFileNameWithoutExtension(f));
-            if (File.Exists(fullPath))
+
+            var files = Directory.GetFiles(dir);
+            var exactFilePath = files.FirstOrDefault(f =>
+            Path.GetFileNameWithoutExtension(f).Equals(cmd, StringComparison.OrdinalIgnoreCase));
+            // var names = files.Select(f => Path.GetFileNameWithoutExtension(f));
+
+            if (exactFilePath != null)
             {
-                System.Console.WriteLine($"{cmd} is {fullPath}");
+                if (OperatingSystem.IsLinux())
+                {
+                    if (isExecutable(exactFilePath))
+                    {
+                        System.Console.WriteLine($"{cmd} is {exactFilePath}");
+                        return;
+                    }
+                }
+                System.Console.WriteLine($"{cmd} is {exactFilePath}");
                 return;
             }
         }
@@ -66,3 +75,12 @@ void type(string[] arguments)
     }
 }
 
+bool isExecutable(string path)
+{
+    if (OperatingSystem.IsLinux())
+    {
+        if (File.GetUnixFileMode(path) != 0)
+            return true;
+    }
+    return false;
+}
