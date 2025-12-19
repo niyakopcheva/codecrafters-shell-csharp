@@ -10,14 +10,10 @@ Dictionary<string, Action<string[]>> commands = new()
     { "type", type }
 };
 
-bool processStarted = false;
-
 while (true)
 {
-    if (!processStarted)
-        Console.Write("$ ");
-    else
-        processStarted = false;
+    Console.Write("$ ");
+
     string command = Console.ReadLine() ?? "";
     if (command == "") continue;
 
@@ -40,15 +36,16 @@ while (true)
         }
 
         if (arguments == null)
-            Process.Start(program);
+        {
+            var process = Process.Start(program);
+            process?.WaitForExit();
+        }
         else
-            Process.Start(program, arguments);
-        processStarted = true;
+        {
+            Process.Start(program, arguments)?.WaitForExit();
+        }
+
     }
-    // else
-    // {
-    //     System.Console.WriteLine($"{firstCommand}: command not found");
-    // }
 }
 
 static void echo(string[] arguments)
