@@ -17,7 +17,10 @@ while (true)
     if (command == "") continue;
 
     string firstCommand = command.Split(" ")[0];
-    string[] arguments = command.Substring(firstCommand.Length).Split(" ");
+    string[] arguments = command.Substring(firstCommand.Length)
+    .Trim()
+    .Split(" ");
+
     if (commands.ContainsKey(firstCommand))
     {
         commands[firstCommand].Invoke(arguments);
