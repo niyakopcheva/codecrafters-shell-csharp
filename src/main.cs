@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
 List<string> builtin = new(["exit", "echo", "type"]);
@@ -58,16 +59,11 @@ void type(string[] arguments)
 
             if (exactFilePath != null)
             {
-                if (OperatingSystem.IsLinux())
+                if (isExecutable(exactFilePath))
                 {
-                    if (isExecutable(exactFilePath))
-                    {
-                        System.Console.WriteLine($"{cmd} is {exactFilePath}");
-                        return;
-                    }
+                    System.Console.WriteLine($"{cmd} is {exactFilePath}");
+                    return;
                 }
-                System.Console.WriteLine($"{cmd} is {exactFilePath}");
-                return;
             }
         }
 
@@ -77,10 +73,16 @@ void type(string[] arguments)
 
 bool isExecutable(string path)
 {
-    if (OperatingSystem.IsLinux())
+    if (OperatingSystem.IsLinux() || OperatingSystem.IsMacOS())
     {
-        if (File.GetUnixFileMode(path) != 0)
+        UnixFileMode mode = File.GetUnixFileMode(path);
+        if ((mode & UnixFileMode.UserExecute) != 0 ||
+        (mode & UnixFileMode.GroupExecute) != 0 ||
+        (mode & UnixFileMode.OtherExecute) != 0)
             return true;
+        return false;
     }
-    return false;
+
+    //for windows
+    return true;
 }
