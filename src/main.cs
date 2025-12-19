@@ -121,7 +121,7 @@ string findExe(string program)
         if (exactFilePath != null)
         {
             if (isExecutable(exactFilePath))
-                return exactFilePath;
+                return program;
         }
     }
     return "";
