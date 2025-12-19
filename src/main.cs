@@ -10,9 +10,14 @@ Dictionary<string, Action<string[]>> commands = new()
     { "type", type }
 };
 
+bool processStarted = false;
+
 while (true)
 {
-    Console.Write("$ ");
+    if (!processStarted)
+        Console.Write("$ ");
+    else
+        processStarted = false;
     string command = Console.ReadLine() ?? "";
     if (command == "") continue;
 
@@ -38,6 +43,7 @@ while (true)
             Process.Start(program);
         else
             Process.Start(program, arguments);
+        processStarted = true;
     }
     // else
     // {
