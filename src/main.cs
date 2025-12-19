@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
@@ -16,15 +17,29 @@ while (true)
     if (command == "") continue;
 
     string firstCommand = command.Split(" ")[0];
-    string[] arguments = command.Substring(command.IndexOf(' ') + 1).Split(" ");
+    string[] arguments = command.Substring(firstCommand.Length).Split(" ");
     if (commands.ContainsKey(firstCommand))
     {
         commands[firstCommand].Invoke(arguments);
     }
     else
     {
-        System.Console.WriteLine($"{firstCommand}: command not found");
+        var program = findExe(firstCommand);
+        if (program == "")
+        {
+            System.Console.WriteLine($"{firstCommand}: command not found");
+            continue;
+        }
+
+        if (arguments == null)
+            Process.Start(program);
+        else
+            Process.Start(program, arguments);
     }
+    // else
+    // {
+    //     System.Console.WriteLine($"{firstCommand}: command not found");
+    // }
 }
 
 static void echo(string[] arguments)
@@ -85,4 +100,26 @@ bool isExecutable(string path)
 
     //for windows
     return true;
+}
+
+string findExe(string program)
+{
+    string? path = Environment.GetEnvironmentVariable("PATH");
+
+    string[] directories = path.Split(Path.PathSeparator);
+    foreach (string dir in directories)
+    {
+        if (!Directory.Exists(dir)) continue;
+
+        var files = Directory.GetFiles(dir);
+        var exactFilePath = files.FirstOrDefault(f =>
+        Path.GetFileNameWithoutExtension(f).Equals(program, StringComparison.OrdinalIgnoreCase));
+
+        if (exactFilePath != null)
+        {
+            if (isExecutable(exactFilePath))
+                return exactFilePath;
+        }
+    }
+    return "";
 }
