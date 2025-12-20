@@ -2,12 +2,13 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
-List<string> builtin = new(["exit", "echo", "type"]);
+List<string> builtin = new(["exit", "echo", "type", "pwd"]);
 Dictionary<string, Action<string[]>> commands = new()
 {
     { "echo", echo },
     { "exit", exit },
-    { "type", type }
+    { "type", type },
+    { "pwd",  pwd  }
 };
 
 while (true)
@@ -128,4 +129,15 @@ string findExe(string program)
         }
     }
     return "";
+}
+
+void pwd(string[] arguments)
+{
+    if (arguments.Count() != 1 || arguments[0] != "")
+    {
+        System.Console.WriteLine("Invalid command");
+        return;
+    }
+    string path = Directory.GetCurrentDirectory();
+    System.Console.WriteLine(path);
 }
