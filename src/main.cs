@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 
 List<string> builtin = new(["exit", "echo", "type", "pwd", "cd"]);
 Dictionary<string, Action<string[]>> commands = new()
@@ -154,14 +155,37 @@ void cd(string[] arguments)
 
     string target = arguments[0];
     //aboslute paths
-    if (target[0] == '/')
-    {
-        if (OperatingSystem.IsWindows())
-            target = target.Replace(@"/", @"\").Substring(1);
+    // if (target[0] == '/')
+    // {
+    if (target.StartsWith("/"))
+        target = target.Replace("/", "\\").Substring(1);
 
-        if (Directory.Exists(target))
-            Directory.SetCurrentDirectory(target);
-        else
-            System.Console.WriteLine($"cd: {target}: No such file or directory");
-    }
+    if (Directory.Exists(target))
+        Directory.SetCurrentDirectory(target);
+    else
+        System.Console.WriteLine($"cd: {target}: No such file or directory");
+    // }
+    // else
+    // {
+    //     if (target.StartsWith("./"))
+    //         target = target.Replace(".", Directory.GetCurrentDirectory());
+    //     if (target.StartsWith("../"))
+    //     {
+    //         var matchCount = Regex.Matches(target, @"\.\.\/").Count();
+    //         for (int i = 0; i < matchCount; i++)
+    //         {
+    //             string current = Directory.GetCurrentDirectory();
+    //             var parent = Directory.GetParent(current);
+    //             if (Directory.Exists(parent.ToString()))
+    //                 Directory.SetCurrentDirectory(parent.ToString());
+    //         }
+
+    //     }
+
+    //     if (OperatingSystem.IsWindows())
+    //         target = target.Replace(@"/", @"\");
+
+    //     if (Directory.Exists(target))
+    //         Directory.SetCurrentDirectory(target);
+    // }
 }
