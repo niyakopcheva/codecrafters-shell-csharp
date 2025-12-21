@@ -162,6 +162,6 @@ void cd(string[] arguments)
         if (Directory.Exists(target))
             Directory.SetCurrentDirectory(target);
         else
-            System.Console.WriteLine($"cd: {target}: No such file or directory.");
+            System.Console.WriteLine($"cd: {target}: No such file or directory");
     }
 }
