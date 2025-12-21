@@ -158,7 +158,7 @@ void cd(string[] arguments)
     // if (target[0] == '/')
     // {
     if (target.StartsWith("/"))
-        target = target.Replace("/", "\\").Substring(1);
+        target = target.Substring(1);
 
     if (Directory.Exists(target))
         Directory.SetCurrentDirectory(target);
