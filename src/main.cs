@@ -2,13 +2,14 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
-List<string> builtin = new(["exit", "echo", "type", "pwd"]);
+List<string> builtin = new(["exit", "echo", "type", "pwd", "cd"]);
 Dictionary<string, Action<string[]>> commands = new()
 {
     { "echo", echo },
     { "exit", exit },
     { "type", type },
-    { "pwd",  pwd  }
+    { "pwd",  pwd  },
+    { "cd",   cd   }
 };
 
 while (true)
@@ -139,5 +140,28 @@ void pwd(string[] arguments)
         return;
     }
     string path = Directory.GetCurrentDirectory();
+    if (path[0] != '/') path = path.Insert(0, "/");
     System.Console.WriteLine(path);
+}
+
+void cd(string[] arguments)
+{
+    if (arguments.Count() != 1 || arguments[0] == "")
+    {
+        System.Console.WriteLine("Invalid command");
+        return;
+    }
+
+    string target = arguments[0];
+    //aboslute paths
+    if (target[0] == '/')
+    {
+        if (OperatingSystem.IsWindows())
+            target = target.Replace(@"/", @"\").Substring(1);
+
+        if (Directory.Exists(target))
+            Directory.SetCurrentDirectory(target);
+        else
+            System.Console.WriteLine($"cd: {target}: No such file or directory.");
+    }
 }
