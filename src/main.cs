@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Runtime;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
@@ -149,43 +150,29 @@ void cd(string[] arguments)
 {
     if (arguments.Count() != 1 || arguments[0] == "")
     {
-        System.Console.WriteLine("Invalid command");
+        Console.WriteLine($"cd: {String.Join(" ", arguments)}: No such file or directory");
         return;
     }
 
     string target = arguments[0];
-    //aboslute paths
-    // if (target[0] == '/')
-    // {
-    if (target.StartsWith("/"))
+    if (target[0] == '/' && target[2] == ':')
         target = target.Substring(1);
 
-    if (Directory.Exists(target))
-        Directory.SetCurrentDirectory(target);
-    else
-        System.Console.WriteLine($"cd: {target}: No such file or directory");
-    // }
-    // else
-    // {
-    //     if (target.StartsWith("./"))
-    //         target = target.Replace(".", Directory.GetCurrentDirectory());
-    //     if (target.StartsWith("../"))
-    //     {
-    //         var matchCount = Regex.Matches(target, @"\.\.\/").Count();
-    //         for (int i = 0; i < matchCount; i++)
-    //         {
-    //             string current = Directory.GetCurrentDirectory();
-    //             var parent = Directory.GetParent(current);
-    //             if (Directory.Exists(parent.ToString()))
-    //                 Directory.SetCurrentDirectory(parent.ToString());
-    //         }
+    try
+    {
+        string fullPath = Path.GetFullPath(target);
 
-    //     }
-
-    //     if (OperatingSystem.IsWindows())
-    //         target = target.Replace(@"/", @"\");
-
-    //     if (Directory.Exists(target))
-    //         Directory.SetCurrentDirectory(target);
-    // }
+        if (Directory.Exists(fullPath))
+        {
+            Directory.SetCurrentDirectory(fullPath);
+        }
+        else
+        {
+            Console.WriteLine($"cd: {target}: No such file or directory");
+        }
+    }
+    catch (Exception)
+    {
+        Console.WriteLine($"cd: {target}: No such file or directory");
+    }
 }
