@@ -158,6 +158,14 @@ void cd(string[] arguments)
     if (target[0] == '/' && target[2] == ':')
         target = target.Substring(1);
 
+    //home env var
+    if (target == "~")
+    {
+        target = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        Directory.SetCurrentDirectory(target);
+        return;
+    }
+
     try
     {
         string fullPath = Path.GetFullPath(target);
