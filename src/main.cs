@@ -186,10 +186,10 @@ void cd(string[] arguments)
 
 string[] getArguments(string input, string firstCommand)
 {
-    input = input.Replace("''", "").Substring(firstCommand.Length);
-    var matches = Regex.Matches(input, @"'([^']*)'|(\S+)");
+    input = input.Replace("''", "").Replace("\"\"", "").Substring(firstCommand.Length);
+    var matches = Regex.Matches(input, @"'([^']*)'|""([^""]*)""|(\S+)");
     string[] arguments = matches
-    .Select(m => m.ToString().Trim('\''))
+    .Select(m => m.ToString().Trim('\'').Trim('\"'))
     .ToArray();
 
     return arguments;
