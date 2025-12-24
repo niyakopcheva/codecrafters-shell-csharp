@@ -134,7 +134,7 @@ string findExe(string program)
 
 void pwd(string[] arguments)
 {
-    if (arguments.Count() != 1 || arguments[0] != "")
+    if (arguments.Count() != 0)
     {
         System.Console.WriteLine("Invalid command");
         return;
