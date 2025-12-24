@@ -22,9 +22,7 @@ while (true)
     if (command == "") continue;
 
     string firstCommand = command.Split(" ")[0];
-    string[] arguments = command.Substring(firstCommand.Length)
-    .Trim()
-    .Split(" ");
+    string[] arguments = getArguments(command, firstCommand);
 
     if (commands.ContainsKey(firstCommand))
     {
@@ -183,4 +181,16 @@ void cd(string[] arguments)
     {
         Console.WriteLine($"cd: {target}: No such file or directory");
     }
+}
+
+
+string[] getArguments(string input, string firstCommand)
+{
+    input = input.Replace("''", "").Substring(firstCommand.Length);
+    var matches = Regex.Matches(input, @"'([^']*)'|(\S+)");
+    string[] arguments = matches
+    .Select(m => m.ToString().Trim('\''))
+    .ToArray();
+
+    return arguments;
 }
